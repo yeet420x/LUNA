@@ -33,7 +33,7 @@ function App() {
                 <img src="/images/dex.png" alt="DexScreener" />
               </a>
               <a 
-                href="https://fartbook.gitbook.io/fartbook-whitepaper" 
+                href="gitbook.io/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="header-link"
