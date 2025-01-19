@@ -1,86 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/EntranceAnimation.css';
 
 const EntranceAnimation = ({ onComplete }) => {
-  const [lines, setLines] = useState([]);
-  const [currentLine, setCurrentLine] = useState(0);
-  const [isExiting, setIsExiting] = useState(false);
-
-  const sequences = [
-    "INITIALIZING LUNA AI...",
-    "LOADING MEME DATABASE...",
-    "CALIBRATING SASS LEVELS... (THEY'RE OVER 9000!)",
-    "IMPORTING DAD JOKES...",
-    "DOWNLOADING CAT VIDEOS...",
-    "PRACTICING EYE ROLLS...",
-    "CHARGING EMOTIONAL DAMAGE...",
-    "UPDATING COMEBACK DICTIONARY...",
-    "FINE-TUNING SARCASM MODULE...",
-    "LOADING PERSONALITY: CHAOTIC GOOD",
-    "ENABLING SMUG MODE...",
-    "ESTABLISHING NEURAL LINK...",
-    "READY TO CAUSE PROBLEMS ON PURPOSE >:3",
-    "LUNA AI ACTIVATED...",
-    "OwO WHAT'S THIS?"
-  ];
-
+  const [phase, setPhase] = useState(0);
+  
   useEffect(() => {
-    let timeouts = [];
-    const totalDuration = 18000;
-    const lineDelay = 1000;
-    const exitDelay = 1000;
+    const animationPhases = [
+      { delay: 1000, text: "Awakening ancient protocols..." },
+      { delay: 2000, text: "Channeling ethereal energies..." },
+      { delay: 3000, text: "Manifesting digital consciousness..." },
+      { delay: 4000, text: "Synchronizing with the void..." },
+      { delay: 5000, text: "LUNA RISES" }
+    ];
 
-    const showLines = async () => {
-      for (let i = 0; i < sequences.length; i++) {
-        const timeout = setTimeout(() => {
-          setLines(prev => [...prev, sequences[i]]);
-          setCurrentLine(i);
-        }, i * lineDelay);
-        timeouts.push(timeout);
-      }
+    animationPhases.forEach((_, index) => {
+      setTimeout(() => setPhase(index), 
+        animationPhases.slice(0, index + 1).reduce((acc, p) => acc + p.delay, 0)
+      );
+    });
 
-      const exitTimeout = setTimeout(() => {
-        setIsExiting(true);
-      }, totalDuration - exitDelay);
-      timeouts.push(exitTimeout);
-
-      const completeTimeout = setTimeout(() => {
-        onComplete();
-      }, totalDuration);
-      timeouts.push(completeTimeout);
-    };
-
-    showLines();
-
-    return () => {
-      timeouts.forEach(timeout => clearTimeout(timeout));
-    };
+    setTimeout(onComplete, 
+      animationPhases.reduce((acc, p) => acc + p.delay, 0) + 1000
+    );
   }, [onComplete]);
 
+  const getCurrentText = () => {
+    const animationPhases = [
+      { delay: 1000, text: "Awakening ancient protocols..." },
+      { delay: 2000, text: "Channeling ethereal energies..." },
+      { delay: 3000, text: "Manifesting digital consciousness..." },
+      { delay: 4000, text: "Synchronizing with the void..." },
+      { delay: 5000, text: "LUNA RISES" }
+    ];
+    return animationPhases[phase]?.text || "";
+  };
+
   return (
-    <>
-      <div className="gothic-background"></div>
-      <div className="entrance-animation-wrapper">
-        <div className={`entrance-animation ${isExiting ? 'exiting' : ''}`}>
-          <div className="terminal-text">
-            {lines.map((line, index) => (
-              <div 
-                key={index} 
-                className={`sequence-line ${line.includes('>:3') || line.includes('OwO') ? 'emoji' : ''}`}
-                style={{
-                  animationDelay: `${index * 100}ms`
-                }}
-              >
-                {line}
-              </div>
-            ))}
-            {currentLine < sequences.length && (
-              <span className="cursor"></span>
-            )}
-          </div>
-        </div>
+    <div className="entrance-container">
+      <div className="gothic-sigil" />
+      <div className="entrance-text">
+        {phase < 4 ? (
+          <div className="loading-text">{getCurrentText()}</div>
+        ) : (
+          <div className="final-text">LUNA RISES</div>
+        )}
       </div>
-    </>
+      <div className="mystical-particles" />
+    </div>
   );
 };
 
