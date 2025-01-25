@@ -20,15 +20,22 @@ function App() {
             <h1>LUNA AI</h1>
             <div className="header-links">
               <a 
-                href="https://t.me/YourTelegramGroup" 
+                href="https://x.com/LunAIonSOL" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="header-link"
               >
-                <img src="/images/tg.svg" alt="Telegram" />
+                <svg 
+                  viewBox="0 0 24 24" 
+                  width="24" 
+                  height="24" 
+                  style={{ fill: 'white' }}
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
               </a>
               <a 
-                href="https://dexscreener.com/YourToken" 
+                href="https://dexscreener.com/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="header-link"
@@ -45,14 +52,7 @@ function App() {
                 
                 <img src="/images/git.svg" alt="Whitepaper" />
               </a>
-              <a 
-                href="https://x.com/LUNAI" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="header-link"
-              >
-                <img src="./images/X.svg" alt="Telegram" />
-              </a>
+              
             </div>
           </header>
           <main>
