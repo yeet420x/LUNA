@@ -27,6 +27,8 @@ const LunaVRMAvatar: React.FC<LunaVRMAvatarProps> = ({
   const isGreetingRef = useRef(false);
   const blowingKissRef = useRef<number>(0);
   const isBlowingKissRef = useRef(false);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   const resetToNeutralPosition = (humanoid: any) => {
     const head = humanoid.getNormalizedBoneNode('head');
@@ -292,6 +294,9 @@ const LunaVRMAvatar: React.FC<LunaVRMAvatarProps> = ({
       controls.enabled = false;
     });
 
+    rendererRef.current = renderer;
+    cameraRef.current = camera;
+
     return () => {
       renderer.dispose();
       if (containerRef.current) {
@@ -314,20 +319,51 @@ const LunaVRMAvatar: React.FC<LunaVRMAvatarProps> = ({
     }
   }, [isHappy]);
 
+  const containerStyle: React.CSSProperties = {
+    width: '100%',
+    maxWidth: window.innerWidth < 768 ? '300px' : '400px',
+    aspectRatio: '1',
+    position: 'relative' as const,
+    overflow: 'hidden',
+    background: 'rgba(0, 0, 0, 0.2)',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto'
+  };
+
+  useEffect(() => {
+    if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
+    
+    const width = window.innerWidth < 768 ? 300 : 400;
+    const height = width;
+    
+    rendererRef.current.setSize(width, height);
+    cameraRef.current.aspect = width / height;
+    cameraRef.current.updateProjectionMatrix();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
+      
+      const width = window.innerWidth < 768 ? 300 : 400;
+      const height = width;
+      
+      rendererRef.current.setSize(width, height);
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div 
-      ref={containerRef} 
-      style={{
-        width: '400px',
-        height: '400px',
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'rgba(0, 0, 0, 0.2)',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
+    <div
+      ref={containerRef}
+      style={containerStyle}
     >
       {error ? (
         <div style={{ color: '#ff6b6b', textAlign: 'center', padding: '1rem' }}>

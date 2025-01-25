@@ -248,4 +248,31 @@ main {
 /* Force remove any grey backgrounds */
 * {
   background-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .App-header {
+    height: 50px;
+    padding: 0.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  main {
+    margin-top: 50px;
+    height: calc(100vh - 50px);
+    padding: 0.5rem;
+  }
+
+  .header-links {
+    gap: 0.75rem;
+  }
+
+  .header-link svg,
+  .header-link img {
+    width: 20px;
+    height: 20px;
+  }
 } 
