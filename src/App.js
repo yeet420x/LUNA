@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import ChatInterface from './components/ChatInterface';
 import BackgroundText from './components/BackgroundText';
@@ -79,8 +79,10 @@ function App() {
         </main>
         <footer className="footer">
           <div className="social-icons">
-            <a href="#" className="icon-link"><img src="/images/tg.svg" alt="Telegram" /></a>
-            <a href="#" className="icon-link">
+            <a href="https://t.me/LunAIonSOL" className="icon-link">
+              <img src="/images/tg.svg" alt="Telegram" />
+            </a>
+            <a href="https://raydium.io/swap" className="icon-link">
               <img 
                 src="/images/dex.svg" 
                 alt="Dex" 
@@ -91,7 +93,9 @@ function App() {
                 }}
               />
             </a>
-            <a href="#" className="icon-link"><img src="/images/gitbook.svg" alt="Gitbook" /></a>
+            <a href="https://docs.lunai.com" className="icon-link">
+              <img src="/images/gitbook.svg" alt="Gitbook" />
+            </a>
             <a href="https://x.com/LunAIonSOL" className="icon-link">
               <img 
                 src="/images/X.svg" 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './styles/ChatInterface.css';
 
 const WEBSOCKET_URL = 'wss://hcycfuvviw7fmk-8000.proxy.runpod.net/ws/chat';
@@ -49,13 +49,15 @@ const ChatInterface = () => {
   };
 
   useEffect(() => {
-    connectWebSocket();
+    if (ws) {
+      connectWebSocket();
+    }
     return () => {
       if (ws) {
         ws.close();
       }
     };
-  }, []);
+  }, [ws, connectWebSocket]);
 
   const sendMessage = () => {
     if (ws && input.trim() && isConnected) {
