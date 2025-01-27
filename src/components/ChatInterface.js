@@ -49,7 +49,7 @@ function ChatInterface() {
         ws.close();
       }
     };
-  }, [connectWebSocket]);
+  }, [connectWebSocket, ws]);
 
   useEffect(() => {
     scrollToBottom();
