@@ -1,63 +1,59 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './styles/ChatInterface.css';
 
-const WEBSOCKET_URL = 'wss://hcycfuvviw7fmk-8000.proxy.runpod.net/ws/chat';
-
-const ChatInterface = () => {
+function ChatInterface() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [ws, setWs] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const connectWebSocket = () => {
-    try {
-      const websocket = new WebSocket(WEBSOCKET_URL);
-      
-      websocket.onopen = () => {
-        console.log('Connected to Luna');
-        setIsConnected(true);
-      };
-
-      websocket.onclose = () => {
-        console.log('Disconnected from Luna');
-        setIsConnected(false);
-        setTimeout(connectWebSocket, 3000);
-      };
-
-      websocket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-      };
-
-      websocket.onmessage = (event) => {
-        try {
-          const response = JSON.parse(event.data);
-          console.log('Received message:', response);
-          setMessages(prev => [...prev, { 
-            text: response.message || response, 
-            sender: 'luna' 
-          }]);
-        } catch (error) {
-          console.error('Error parsing message:', error);
-        }
-      };
-
-      setWs(websocket);
-    } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const connectWebSocket = useCallback(() => {
+    const socket = new WebSocket('wss://hcycfuvviw7fmk-8000.proxy.runpod.net/ws/chat');
+    
+    socket.onopen = () => {
+      console.log('WebSocket Connected');
+      setIsConnected(true);
+      setWs(socket);
+    };
+
+    socket.onmessage = (event) => {
+      try {
+        const response = JSON.parse(event.data);
+        setMessages(prev => [...prev, { text: response.message, sender: 'luna' }]);
+      } catch (error) {
+        console.error('Error parsing message:', error);
+      }
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket Disconnected');
+      setIsConnected(false);
+      setWs(null);
+      setTimeout(connectWebSocket, 3000);
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  }, []);
+
   useEffect(() => {
-    if (ws) {
-      connectWebSocket();
-    }
+    connectWebSocket();
     return () => {
       if (ws) {
         ws.close();
       }
     };
-  }, [ws, connectWebSocket]);
+  }, [connectWebSocket]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = () => {
     if (ws && input.trim() && isConnected) {
@@ -67,14 +63,6 @@ const ChatInterface = () => {
       setInput('');
     }
   };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   return (
     <div className="chat-interface">
@@ -111,6 +99,6 @@ const ChatInterface = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatInterface; 
