@@ -16,6 +16,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  background: black;
   z-index: 999998;
   display: flex;
   justify-content: center;
@@ -29,7 +30,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.7);
+  opacity: 1;
   transition: opacity 1s;
   z-index: 999998;
 }
@@ -39,27 +40,23 @@
 }
 
 .terminal-text {
-  color: #6e4a9e;
+  color: #FF1493;
   font-size: 1.2rem;
   line-height: 1.4;
-  text-align: left;
+  text-align: center;
   padding: 2rem;
   width: 100%;
   max-width: 600px;
-  text-shadow: 0 0 10px rgba(110, 74, 158, 0.5);
+  text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
   position: relative;
   z-index: 999999;
 }
 
 .sequence-line {
   opacity: 0;
-  animation: typeIn 0.3s forwards;
+  animation: pinkTypeIn 0.3s forwards;
   white-space: pre;
   margin-bottom: 0.2rem;
-  position: relative;
-  padding-left: 25px;
-  letter-spacing: 0.5px;
-  z-index: 1000000;
 }
 
 .sequence-line::before {
@@ -82,31 +79,39 @@
 
 .cursor {
   display: inline-block;
-  width: 0.6em;
-  height: 1em;
-  background-color: #6e4a9e;
+  width: 8px;
+  height: 1.2rem;
+  background-color: #FF1493;
   margin-left: 2px;
-  vertical-align: middle;
-  animation: blink 1s infinite;
-  box-shadow: 0 0 10px rgba(110, 74, 158, 0.5);
-  z-index: 1000000;
+  animation: pinkBlink 1s infinite;
+  box-shadow: 0 0 10px #FF1493;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes typeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(5px);
-    filter: blur(2px);
+@keyframes pinkBlink {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 10px #FF1493;
   }
-  100% {
+  50% { 
+    opacity: 0;
+    box-shadow: none;
+  }
+}
+
+@keyframes pinkTypeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    text-shadow: 0 0 5px #FF1493;
+  }
+  to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
+    text-shadow: 
+      0 0 7px #FF1493,
+      0 0 10px #FF1493,
+      0 0 21px #FF1493,
+      0 0 42px rgba(255, 20, 147, 0.7);
   }
 }
 
@@ -135,8 +140,12 @@
 
 .entrance-container {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: #000;
+  z-index: 999998;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,7 +155,7 @@
 .gothic-sigil {
   width: 200px;
   height: 200px;
-  border: 2px solid #6e4a9e;
+  border: 2px solid #FF1493;
   transform: rotate(45deg);
   animation: sigilPulse 2s infinite;
   position: relative;
@@ -157,15 +166,39 @@
   content: '';
   position: absolute;
   inset: -10px;
-  border: 1px solid #6e4a9e;
+  border: 1px solid #FF1493;
   animation: sigilRotate 4s infinite linear;
+}
+
+@keyframes sigilPulse {
+  0%, 100% { 
+    transform: rotate(45deg) scale(1); 
+    opacity: 0.5;
+    box-shadow: 
+      0 0 20px rgba(255, 20, 147, 0.3),
+      0 0 40px rgba(255, 20, 147, 0.2),
+      inset 0 0 20px rgba(255, 20, 147, 0.3);
+  }
+  50% { 
+    transform: rotate(45deg) scale(1.1); 
+    opacity: 1;
+    box-shadow: 
+      0 0 30px rgba(255, 20, 147, 0.5),
+      0 0 60px rgba(255, 20, 147, 0.3),
+      inset 0 0 30px rgba(255, 20, 147, 0.5);
+  }
+}
+
+@keyframes sigilRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .entrance-text {
   margin-top: 2rem;
   font-family: 'Cinzel', serif;
-  color: #6e4a9e;
-  text-shadow: 0 0 10px #6e4a9e;
+  color: #FF1493;
+  text-shadow: 0 0 10px #FF1493;
 }
 
 .loading-text {
@@ -178,22 +211,31 @@
   animation: finalReveal 1s forwards;
 }
 
-@keyframes sigilPulse {
-  0%, 100% { transform: rotate(45deg) scale(1); opacity: 0.5; }
-  50% { transform: rotate(45deg) scale(1.1); opacity: 1; }
-}
-
-@keyframes sigilRotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 @keyframes textPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%, 100% { 
+    opacity: 0.5;
+    text-shadow: 0 0 10px #FF1493;
+  }
+  50% { 
+    opacity: 1;
+    text-shadow: 
+      0 0 20px #FF1493,
+      0 0 40px #FF1493;
+  }
 }
 
 @keyframes finalReveal {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { 
+    transform: scale(0.5); 
+    opacity: 0;
+    text-shadow: 0 0 10px #FF1493;
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1;
+    text-shadow: 
+      0 0 20px #FF1493,
+      0 0 40px #FF1493,
+      0 0 60px #FF1493;
+  }
 }

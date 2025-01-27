@@ -1,68 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import ChatInterface from './components/ChatInterface';
+import BackgroundText from './components/BackgroundText';
 import EntranceAnimation from './components/EntranceAnimation';
-import backgroundImage from './images/gothic-bg.jpg';
-import CustomCursor from './components/CustomCursor';
-import AtmosphericBackground from './components/AtmosphericBackground';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [showEntrance, setShowEntrance] = useState(true);
+  const [showContent, setShowContent] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio('./audio/lonely.mp3');
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.3;
+    
+    const handleFirstInteraction = () => {
+      audioRef.current.play().catch(err => 
+        console.log('Audio playback failed:', err)
+      );
+      document.removeEventListener('click', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleAnimationComplete = () => {
+    setShowEntrance(false);
+    setTimeout(() => {
+      setShowContent(true);
+      // Try to play again after animation
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.play().catch(err => 
+          console.log('Audio playback failed after animation:', err)
+        );
+      }
+    }, 100);
+  };
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   return (
-    <div className="App">
-      <AtmosphericBackground />
-      {isLoading ? (
-        <EntranceAnimation onComplete={() => setIsLoading(false)} />
-      ) : (
-        <>
-          <header className="App-header">
-            <h1>LUNA AI</h1>
-            <div className="header-links">
-              <a 
-                href="https://x.com/LunAIonSOL" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="header-link"
-              >
-                <svg 
-                  viewBox="0 0 24 24" 
-                  width="24" 
-                  height="24" 
-                  style={{ fill: 'white' }}
-                >
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a 
-                href="https://dexscreener.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="header-link"
-              >
-                <img src="/images/dex.png" alt="DexScreener" />
-              </a>
-              
-              <a 
-                href="gitbook.io/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="header-link"
-              >
-                
-                <img src="/images/git.svg" alt="Whitepaper" />
-              </a>
-              
-            </div>
-          </header>
-          <main>
-            <ChatInterface />
-          </main>
-          <CustomCursor />
-        </>
+    <div className="App" onClick={() => {
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.play().catch(err => 
+          console.log('Audio playback failed on click:', err)
+        );
+      }
+    }}>
+      <div className="audio-hint">
+        CLICK ANYWHERE FOR AUDIO
+      </div>
+      {showEntrance && (
+        <EntranceAnimation onComplete={handleAnimationComplete} />
       )}
+      <div className={`content ${showContent ? 'visible' : ''}`}>
+        <div className="background-container">
+          <BackgroundText />
+        </div>
+        <header className="header">
+          <h1 className="luna-title">LUNA</h1>
+        </header>
+        <main className="main-content">
+          <ChatInterface />
+        </main>
+        <footer className="footer">
+          <div className="social-icons">
+            <a href="#" className="icon-link"><img src="/images/tg.svg" alt="Telegram" /></a>
+            <a href="#" className="icon-link">
+              <img 
+                src="/images/dex.svg" 
+                alt="Dex" 
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  objectFit: 'contain'
+                }}
+              />
+            </a>
+            <a href="#" className="icon-link"><img src="/images/gitbook.svg" alt="Gitbook" /></a>
+            <a href="https://x.com/LunAIonSOL" className="icon-link">
+              <img 
+                src="/images/X.svg" 
+                alt="X" 
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  objectFit: 'contain'
+                }}
+              />
+            </a>
+          </div>
+          <button 
+            className="minimal-audio-toggle"
+            onClick={toggleMute}
+            aria-label="Toggle audio"
+          >
+            {isMuted ? '🔇' : '🔊'}
+          </button>
+        </footer>
+      </div>
     </div>
   );
 }
 
-export default App; 
+export default App;

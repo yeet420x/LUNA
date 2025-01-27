@@ -6,11 +6,11 @@ const EntranceAnimation = ({ onComplete }) => {
   
   useEffect(() => {
     const animationPhases = [
-      { delay: 1000, text: "Awakening ancient protocols..." },
-      { delay: 2000, text: "Channeling ethereal energies..." },
-      { delay: 3000, text: "Manifesting digital consciousness..." },
-      { delay: 4000, text: "Synchronizing with the void..." },
-      { delay: 5000, text: "LUNA RISES" }
+      { delay: 2000, text: "Awakening ancient protocols..." },
+      { delay: 2500, text: "Channeling ethereal energies..." },
+      { delay: 2500, text: "Manifesting digital consciousness..." },
+      { delay: 2500, text: "Synchronizing with the void..." },
+      { delay: 2500, text: "LUNA RISES" }
     ];
 
     animationPhases.forEach((_, index) => {
@@ -19,18 +19,17 @@ const EntranceAnimation = ({ onComplete }) => {
       );
     });
 
-    setTimeout(onComplete, 
-      animationPhases.reduce((acc, p) => acc + p.delay, 0) + 1000
-    );
+    // Total animation time: 12000ms (12 seconds)
+    setTimeout(onComplete, 12000);
   }, [onComplete]);
 
   const getCurrentText = () => {
     const animationPhases = [
-      { delay: 1000, text: "Awakening ancient protocols..." },
-      { delay: 2000, text: "Channeling ethereal energies..." },
-      { delay: 3000, text: "Manifesting digital consciousness..." },
-      { delay: 4000, text: "Synchronizing with the void..." },
-      { delay: 5000, text: "LUNA RISES" }
+      { delay: 2000, text: "Awakening ancient protocols..." },
+      { delay: 2500, text: "Channeling ethereal energies..." },
+      { delay: 2500, text: "Manifesting digital consciousness..." },
+      { delay: 2500, text: "Synchronizing with the void..." },
+      { delay: 2500, text: "LUNA RISES" }
     ];
     return animationPhases[phase]?.text || "";
   };
@@ -50,4 +49,4 @@ const EntranceAnimation = ({ onComplete }) => {
   );
 };
 
-export default EntranceAnimation; 
+export default EntranceAnimation;
