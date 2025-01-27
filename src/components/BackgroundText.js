@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import './styles/BackgroundText.css';
 
 const BackgroundText = () => {
