@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/EntranceAnimation.css';
 
 const EntranceAnimation = ({ onComplete }) => {
